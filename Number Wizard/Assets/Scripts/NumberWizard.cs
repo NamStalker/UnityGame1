@@ -19,11 +19,11 @@ public class NumberWizard : MonoBehaviour {
 
     void StartGame()
     {
-        max = 1000;
+        max = 1001;
         min = 1;
-        guess = 500;
-
-        max++;
+        NextGuess();
+        //Offset the NextGuess countdown for max guess
+        maxGuesses++;
     }
 
     public void GuessHigher()
@@ -31,10 +31,6 @@ public class NumberWizard : MonoBehaviour {
         //raises the floor to the guesses
         min = guess;
         NextGuess();
-        maxGuesses--;
-        if (maxGuesses == 0)
-            ThatsIt();
-        guessText.text = guess.ToString();
     }
 
     public void GuessLower()
@@ -42,10 +38,6 @@ public class NumberWizard : MonoBehaviour {
         //lowers the ceiling to the guesses
         max = guess;
         NextGuess();
-        maxGuesses--;
-        if (maxGuesses == 0)
-            ThatsIt();
-        guessText.text = guess.ToString();
     }
 
     public void ThatsIt()
@@ -55,6 +47,10 @@ public class NumberWizard : MonoBehaviour {
 
     void NextGuess()
     {
-        guess = (max + min) / 2;
+        guess = Random.Range(min, max);
+        maxGuesses--;
+        if (maxGuesses == 0)
+            ThatsIt();
+        guessText.text = guess.ToString();
     }
 }
