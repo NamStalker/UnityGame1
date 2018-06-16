@@ -1,12 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class NumberWizard : MonoBehaviour {
 
     private int guess;
     private int max;
     private int min;
+    public int maxGuesses = 5;
+    public Text guessText;
 
     void Start()
     {
@@ -15,45 +19,38 @@ public class NumberWizard : MonoBehaviour {
 
     void StartGame()
     {
-        max = 1000;
+        max = 1001;
         min = 1;
-        guess = 500;
-
-        print("========================");
-        print("Welcome to Number Wizard");
-        print("Pick a number in your head, but don't tell me!");
-
-        print("The highest number you can pick is " + max);
-        print("The lowest number you can pick is " + min);
-
-        print("Is the number higher or lower than " + guess + "?");
-        print("Up arrow for higher, down arrow for lower, return for equal.");
-
-        max++;
+        NextGuess();
+        //Offset the NextGuess countdown for max guess
+        maxGuesses++;
     }
-	
-	void Update ()
+
+    public void GuessHigher()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            min = guess;
-            NextGuess();
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            max = guess;
-            NextGuess();
-        }
-        else if (Input.GetKeyDown(KeyCode.Return))
-        {
-            print("Ahah! I've done it! Thank you for playing!");
-            StartGame();
-        }     
+        //raises the floor to the guesses
+        min = guess;
+        NextGuess();
+    }
+
+    public void GuessLower()
+    {
+        //lowers the ceiling to the guesses
+        max = guess;
+        NextGuess();
+    }
+
+    public void ThatsIt()
+    {
+        SceneManager.LoadScene("Win");
     }
 
     void NextGuess()
     {
-        guess = (max + min) / 2;
-        print("Ah! Is the number higher or lower than " + guess + "?");
+        guess = Random.Range(min, max);
+        maxGuesses--;
+        if (maxGuesses == 0)
+            ThatsIt();
+        guessText.text = guess.ToString();
     }
 }
